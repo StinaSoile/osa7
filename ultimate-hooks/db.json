@@ -1,4 +1,26 @@
 {
+  "elukat": [
+    {
+      "name": "Viili",
+      "species": "pupu",
+      "id": 7
+    },
+    {
+      "name": "Ruska",
+      "species": "koira",
+      "id": 8
+    },
+    {
+      "name": "Ressu",
+      "species": "HUSKY",
+      "id": 11
+    },
+    {
+      "name": "Tom",
+      "species": "pupu",
+      "id": 12
+    }
+  ],
   "notes": [
     {
       "id": 1,
@@ -23,6 +45,14 @@
     {
       "content": "Happyhappyhappy",
       "id": 6
+    },
+    {
+      "content": "kissa",
+      "id": 7
+    },
+    {
+      "content": "apina",
+      "id": 8
     }
   ],
   "persons": [

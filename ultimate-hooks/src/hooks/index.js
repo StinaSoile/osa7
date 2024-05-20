@@ -21,8 +21,16 @@ export const useResource = (baseUrl) => {
         return response.data
     }
 
+    const remove = async (object) => {
+        const id = object.id
+        const response = await axios.delete(`${baseUrl}/${Number(id)}`)
+        setResources(resources.filter((o) => o.id !== object.id))
+        return response.data
+    }
+
     const service = {
-        create
+        create,
+        remove
     }
 
     return [

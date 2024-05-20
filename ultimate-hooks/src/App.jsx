@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useResource } from "./hooks";
 
 const useField = (type) => {
@@ -19,7 +19,9 @@ const App = () => {
   const content = useField("text");
   const name = useField("text");
   const number = useField("text");
+  const species = useField("text");
 
+  const [elukat, elukkaService] = useResource("http://localhost:3005/elukat");
   const [notes, noteService] = useResource("http://localhost:3005/notes");
   const [persons, personService] = useResource("http://localhost:3005/persons");
 
@@ -31,6 +33,16 @@ const App = () => {
   const handlePersonSubmit = (event) => {
     event.preventDefault();
     personService.create({ name: name.value, number: number.value });
+  };
+
+  const handleElukkaSubmit = (event) => {
+    event.preventDefault();
+    elukkaService.create({ name: name.value, species: species.value });
+  };
+
+  const handleDelete = (object) => {
+    elukkaService.remove(object);
+    console.log(object);
   };
 
   return (
@@ -53,6 +65,18 @@ const App = () => {
       {persons.map((n) => (
         <p key={n.id}>
           {n.name} {n.number}
+        </p>
+      ))}
+      <h2>Elukat</h2>
+      <form onSubmit={handleElukkaSubmit}>
+        name <input {...name} /> <br />
+        species <input {...species} />
+        <button>create</button>
+      </form>
+      {elukat.map((n) => (
+        <p key={n.id}>
+          {n.name} {n.species}
+          <button onClick={() => handleDelete(n)}>delete</button>
         </p>
       ))}
     </div>
