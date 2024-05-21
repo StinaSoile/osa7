@@ -1,21 +1,15 @@
 import { useState } from "react";
 import blogService from "../services/blogs";
+import { useDispatch } from "react-redux";
 
-const CreateBlog = ({
-  setNotification,
-  user,
-  fetchBlogs,
-  // handleCreateBlog,
-  // title,
-  // setTitle,
-  // author,
-  // setAuthor,
-  // url,
-  // setUrl,
-}) => {
+import { setNotification } from "../reducers/notificationReducer";
+
+const CreateBlog = ({ user, fetchBlogs }) => {
   const [title, setTitle] = useState("");
   const [author, setAuthor] = useState("");
   const [url, setUrl] = useState("");
+
+  const dispatch = useDispatch();
 
   const handleCreateBlog = async (event) => {
     event.preventDefault();
@@ -29,13 +23,13 @@ const CreateBlog = ({
       setTitle("");
       setAuthor("");
       setUrl("");
-      setNotification({
-        message: `New blog ${newBlog.title} created`,
-        type: "notification",
-      });
+
+      await dispatch(
+        setNotification(`New blog ${newBlog.title} created`, "notif")
+      );
       fetchBlogs();
     } catch (exception) {
-      setNotification({ message: "Could not create new blog", type: "error" });
+      await dispatch(setNotification("Could not create new blog", "error"));
     }
   };
   return (

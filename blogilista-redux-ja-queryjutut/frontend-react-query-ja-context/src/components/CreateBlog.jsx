@@ -1,18 +1,9 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import blogService from "../services/blogs";
+import NotifContext from "../NotifContext";
 
-const CreateBlog = ({
-  setNotification,
-  user,
-  fetchBlogs,
-  // handleCreateBlog,
-  // title,
-  // setTitle,
-  // author,
-  // setAuthor,
-  // url,
-  // setUrl,
-}) => {
+const CreateBlog = ({ user, fetchBlogs }) => {
+  const [notif, dispatch] = useContext(NotifContext);
   const [title, setTitle] = useState("");
   const [author, setAuthor] = useState("");
   const [url, setUrl] = useState("");
@@ -29,13 +20,22 @@ const CreateBlog = ({
       setTitle("");
       setAuthor("");
       setUrl("");
-      setNotification({
-        message: `New blog ${newBlog.title} created`,
-        type: "notification",
+      dispatch({
+        type: "NOTE",
+        payload: {
+          message: `New blog ${newBlog.title} created`,
+          type: "notif",
+        },
       });
       fetchBlogs();
     } catch (exception) {
-      setNotification({ message: "Could not create new blog", type: "error" });
+      dispatch({
+        type: "NOTE",
+        payload: {
+          message: `Could not create new blog`,
+          type: "error",
+        },
+      });
     }
   };
   return (

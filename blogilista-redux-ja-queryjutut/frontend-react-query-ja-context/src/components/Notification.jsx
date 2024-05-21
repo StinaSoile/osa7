@@ -1,9 +1,11 @@
 import PropTypes from "prop-types";
+import NotifContext from "../NotifContext";
+import { useContext } from "react";
 
 let timeoutId;
-const Notification = ({ notification, setNotification }) => {
-  //   return <div>kissa</div>;
-  if (!notification) {
+const Notification = () => {
+  const [notif, dispatch] = useContext(NotifContext);
+  if (notif.message === "") {
     return null;
   }
 
@@ -12,14 +14,12 @@ const Notification = ({ notification, setNotification }) => {
   }
 
   timeoutId = setTimeout(() => {
-    setNotification(null);
+    dispatch({
+      type: "DEL",
+    });
   }, 5000);
 
-  let className = "notif";
-  if (notification.type === "error") {
-    className = "error";
-  }
-  return <div className={className}>{notification.message}</div>;
+  return <div className={notif.type}>{notif.message}</div>;
 };
 
 Notification.propTypes = {

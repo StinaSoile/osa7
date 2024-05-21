@@ -7,14 +7,17 @@ import loginService from "./services/login";
 import Logout from "./components/Logout";
 import Notification from "./components/Notification";
 import Togglable from "./components/Togglable";
-
+import { useSelector, useDispatch } from "react-redux";
+import { setNotification } from "./reducers/notificationReducer";
+import { setBlogList, fetchAndSetBlogs } from "./reducers/blogReducer";
+import { login, logout } from "./reducers/userReducer";
 const App = () => {
-  const [blogs, setBlogs] = useState([]);
+  const dispatch = useDispatch();
+  const blogs = useSelector((state) => state.blogs);
+  const user = useSelector((state) => state.user);
+
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [user, setUser] = useState(null);
-
-  const [notification, setNotification] = useState(null);
 
   useEffect(() => {
     if (user) {
@@ -26,16 +29,12 @@ const App = () => {
     const loggedUser = window.localStorage.getItem("loggedBlogappUser");
     if (loggedUser) {
       const user = JSON.parse(loggedUser);
-      setUser(user);
+      dispatch(login(user));
     }
   }, []);
 
   const fetchBlogs = async () => {
-    const blogList = await blogService.getAll(user.token);
-    blogList.sort((a, b) => {
-      return b.likes - a.likes;
-    });
-    setBlogs(blogList);
+    dispatch(fetchAndSetBlogs(user));
   };
 
   const handleLogin = async (event) => {
@@ -47,22 +46,20 @@ const App = () => {
       });
 
       window.localStorage.setItem("loggedBlogappUser", JSON.stringify(user));
-      setUser(user);
-      // setUsername("");
-      // setPassword("");
-      setNotification({
-        message: `Welcome, ${user.username}`,
-        type: "notification",
-      });
+      dispatch(login(user));
+      setUsername("");
+      setPassword("");
+
+      await dispatch(setNotification(`Welcome, ${user.username}`, "notif"));
     } catch (exception) {
-      setNotification({ message: "Wrong credentials", type: "error" });
+      await dispatch(setNotification("Wrong credentials", "error"));
     }
   };
 
   const handleLogout = (event) => {
     event.preventDefault();
     window.localStorage.removeItem("loggedBlogappUser");
-    setUser(null);
+    dispatch(logout());
   };
 
   const handleLike = async (blog) => {
@@ -76,8 +73,6 @@ const App = () => {
 
     await blogService.likeBlog(blog.id, likedBlog, user.token);
     fetchBlogs();
-    // const newBlogs = await blogService.getAll(user.token);
-    // setBlogs(newBlogs);
   };
 
   const handleDelete = async (blog) => {
@@ -87,15 +82,11 @@ const App = () => {
     ) {
       try {
         const deletedBlog = await blogService.deleteBlog(blog.id, user.token);
-        setNotification({
-          message: `Blog ${deletedBlog} is removed`,
-          type: "notification",
-        });
+        await dispatch(
+          setNotification(`Blog ${deletedBlog} is removed`, "notif")
+        );
       } catch (exception) {
-        setNotification({
-          message: `Could not remove blog`,
-          type: "error",
-        });
+        await dispatch(setNotification(`Could not remove blog`, "error"));
       }
       fetchBlogs();
     }
@@ -103,10 +94,7 @@ const App = () => {
 
   return (
     <div>
-      <Notification
-        notification={notification}
-        setNotification={setNotification}
-      />
+      <Notification />
       {!user && (
         <Login
           handleLogin={handleLogin}
@@ -123,7 +111,6 @@ const App = () => {
             <CreateBlog
               // blogs={blogs}
               // setBlogs={setBlogs}
-              setNotification={setNotification}
               user={user}
               fetchBlogs={fetchBlogs}
             />
@@ -157,22 +144,20 @@ export default App;
 Siirry käyttämään React-komponenttien tilan sijaan
 Reduxia sovelluksen tilan hallintaan.
 Muuta tässä tehtävässä notifikaatio käyttämään Reduxia.
+DONE
 
 7.11
-
-
-Tämä ja seuraava kaksi osaa ovat kohtuullisen työläitä, mutta erittäin opettavaisia.
-
 Siirrä blogien tietojen talletus Reduxiin.
 Tässä tehtävässä riittää, että sovellus näyttää olemassa olevat blogit
 ja että uuden blogin luominen onnistuu.
 
 Kirjautumisen ja uuden blogin luomisen lomakkeiden tilaa
 kannattaa hallita edelleen Reactin tilan avulla.
+DONE
 
 7.12
-Laajenna ratkaisua siten, että blogien "liketys" ja poisto toimivat.
+Laajenna ratkaisua siten, että blogien "liketys" ja poisto toimivat. DONE
 
 7.13
-Siirrä myös kirjautuneen käyttäjän tietojen talletus Reduxiin.
+Siirrä myös kirjautuneen käyttäjän tietojen talletus Reduxiin. DONe
 */

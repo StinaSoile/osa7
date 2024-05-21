@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import Blog from "./components/Blog";
 import blogService from "./services/blogs";
 import Login from "./components/Login";
@@ -7,14 +7,15 @@ import loginService from "./services/login";
 import Logout from "./components/Logout";
 import Notification from "./components/Notification";
 import Togglable from "./components/Togglable";
+import NotifContext from "./NotifContext";
+import { useQuery } from "@tanstack/react-query";
 
 const App = () => {
+  const [notif, notifDispatch] = useContext(NotifContext);
   const [blogs, setBlogs] = useState([]);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [user, setUser] = useState(null);
-
-  const [notification, setNotification] = useState(null);
 
   useEffect(() => {
     if (user) {
@@ -29,6 +30,11 @@ const App = () => {
       setUser(user);
     }
   }, []);
+
+  // const result = useQuery({
+  //   queryKey: ["blogs"],
+  //   queryFn: blogService.getAll(user.token),
+  // });
 
   const fetchBlogs = async () => {
     const blogList = await blogService.getAll(user.token);
@@ -50,12 +56,16 @@ const App = () => {
       setUser(user);
       // setUsername("");
       // setPassword("");
-      setNotification({
-        message: `Welcome, ${user.username}`,
-        type: "notification",
+
+      notifDispatch({
+        type: "NOTE",
+        payload: { message: `Welcome, ${user.username}`, type: "notif" },
       });
     } catch (exception) {
-      setNotification({ message: "Wrong credentials", type: "error" });
+      notifDispatch({
+        type: "NOTE",
+        payload: { message: "Wrong credentials", type: "error" },
+      });
     }
   };
 
@@ -87,14 +97,21 @@ const App = () => {
     ) {
       try {
         const deletedBlog = await blogService.deleteBlog(blog.id, user.token);
-        setNotification({
-          message: `Blog ${deletedBlog} is removed`,
-          type: "notification",
+
+        notifDispatch({
+          type: "NOTE",
+          payload: {
+            message: `Blog ${deletedBlog} is removed`,
+            type: "notif",
+          },
         });
       } catch (exception) {
-        setNotification({
-          message: `Could not remove blog`,
-          type: "error",
+        notifDispatch({
+          type: "NOTE",
+          payload: {
+            message: `Could not remove blog`,
+            type: "error",
+          },
         });
       }
       fetchBlogs();
@@ -103,10 +120,7 @@ const App = () => {
 
   return (
     <div>
-      <Notification
-        notification={notification}
-        setNotification={setNotification}
-      />
+      <Notification />
       {!user && (
         <Login
           handleLogin={handleLogin}
@@ -120,13 +134,7 @@ const App = () => {
         <>
           <Logout handleLogout={handleLogout} username={user.username} />
           <Togglable buttonLabel="new blog">
-            <CreateBlog
-              // blogs={blogs}
-              // setBlogs={setBlogs}
-              setNotification={setNotification}
-              user={user}
-              fetchBlogs={fetchBlogs}
-            />
+            <CreateBlog user={user} fetchBlogs={fetchBlogs} />
           </Togglable>
           <h2>blogs</h2>
           {blogs.map((blog) => (
@@ -155,7 +163,7 @@ export default App;
 /*
 7.10
 Muuta notifikaation tilanhallinta
-tapahtumaan käyttäen useReducer-hookia ja contextia.
+tapahtumaan käyttäen useReducer-hookia ja contextia. DONE
 
 7.11
 Siirrä blogien tietojen hallinnointi tapahtumaan

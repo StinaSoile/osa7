@@ -1,30 +1,21 @@
-import PropTypes from "prop-types";
+import { useSelector } from "react-redux";
 
-let timeoutId;
-const Notification = ({ notification, setNotification }) => {
-  //   return <div>kissa</div>;
-  if (!notification) {
+const Notification = () => {
+  const notif = useSelector((state) => {
+    const message = state.notification.message;
+    const type = state.notification.type;
+    return { message, type };
+  });
+
+  if (notif.message === "") {
     return null;
   }
 
-  if (timeoutId !== undefined) {
-    clearTimeout(timeoutId);
-  }
-
-  timeoutId = setTimeout(() => {
-    setNotification(null);
-  }, 5000);
-
-  let className = "notif";
-  if (notification.type === "error") {
-    className = "error";
-  }
-  return <div className={className}>{notification.message}</div>;
-};
-
-Notification.propTypes = {
-  notification: PropTypes.any,
-  setNotification: PropTypes.func,
+  return (
+    <>
+      <div className={notif.type}>{notif.message}</div>
+    </>
+  );
 };
 
 export default Notification;

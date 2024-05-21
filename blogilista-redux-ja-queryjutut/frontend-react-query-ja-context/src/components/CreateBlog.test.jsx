@@ -2,17 +2,6 @@ import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import CreateBlog from "./CreateBlog";
 
-/*5.16:
-Tehtävänanto: testaa että lomake kutsuu propsina saamaansa takaisinkutsufunktiota
-oikeilla tiedoilla siinä vaiheessa kun blogi luodaan.
-
-Koodissani on vähän erilainen rakenne kuin mallissa,
-joten testaan ainoaa järkevää propseina saamaani funktiota.
-Testissä tarvitsisi kuitenkin käyttäjän ja tokenin,
-joten testaan nyt että palautuu oikea error,
-jos tokenia ei ole, koska päättelen, että käytän tässä asioita,
-joita tehtävässä oli tarkoitus oppia.
-*/
 test("when creates blog, calls fetchBlog", async () => {
   const user = userEvent.setup();
   const fetchHandler = vi.fn();
