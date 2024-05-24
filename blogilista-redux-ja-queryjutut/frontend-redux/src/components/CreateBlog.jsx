@@ -1,6 +1,7 @@
 import { useState } from "react";
 import blogService from "../services/blogs";
 import { useDispatch } from "react-redux";
+import { Form, Button } from "react-bootstrap";
 
 import { setNotification } from "../reducers/notificationReducer";
 
@@ -35,10 +36,10 @@ const CreateBlog = ({ user, fetchBlogs }) => {
   return (
     <>
       <h2>Create new blog</h2>
-      <form onSubmit={handleCreateBlog}>
-        <div>
-          title
-          <input
+      <Form onSubmit={handleCreateBlog}>
+        <Form.Group>
+          <Form.Label>title:</Form.Label>
+          <Form.Control
             data-testid="title"
             type="text"
             placeholder="title"
@@ -46,10 +47,10 @@ const CreateBlog = ({ user, fetchBlogs }) => {
             name="Title"
             onChange={({ target }) => setTitle(target.value)}
           />
-        </div>
-        <div>
-          author
-          <input
+        </Form.Group>
+        <Form.Group>
+          <Form.Label>author:</Form.Label>
+          <Form.Control
             data-testid="author"
             type="text"
             placeholder="author"
@@ -57,10 +58,10 @@ const CreateBlog = ({ user, fetchBlogs }) => {
             name="Author"
             onChange={({ target }) => setAuthor(target.value)}
           />
-        </div>
-        <div>
-          url
-          <input
+        </Form.Group>
+        <Form.Group>
+          <Form.Label>url:</Form.Label>
+          <Form.Control
             data-testid="url"
             type="text"
             placeholder="url"
@@ -68,11 +69,11 @@ const CreateBlog = ({ user, fetchBlogs }) => {
             name="Url"
             onChange={({ target }) => setUrl(target.value)}
           />
-        </div>
-        <button data-testid="createbutton" type="submit">
+        </Form.Group>
+        <Button data-testid="createbutton" type="submit">
           create
-        </button>
-      </form>
+        </Button>
+      </Form>
     </>
   );
 };

@@ -1,7 +1,9 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 
 const Blog = ({ blog, handleLike, handleDelete, user }) => {
   const [expand, setExpand] = useState(false);
+  if (!user.username) return;
   let visible = false;
   if (blog.user.username === user.username) {
     visible = true;
@@ -15,12 +17,14 @@ const Blog = ({ blog, handleLike, handleDelete, user }) => {
 
   if (expand === false) {
     return (
-      <div className="blog">
-        <div>
-          {blog.title} {blog.author}
-        </div>
-        <button onClick={handleExpand}>view</button>
-      </div>
+      <>
+        <td>
+          <Link to={`/blogs/${blog.id}`}>{blog.title}</Link>
+        </td>
+        <td>{blog.author}</td>
+
+        {/* <button onClick={handleExpand}>view here</button> */}
+      </>
     );
   }
   if (expand === true) {

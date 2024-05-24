@@ -82,6 +82,7 @@ const App = () => {
       url: blog.url,
       likes: blog.likes + 1,
       user: blog.user.id,
+      comments: blog.comments,
     };
 
     await blogService.likeBlog(blog.id, likedBlog, user.token);

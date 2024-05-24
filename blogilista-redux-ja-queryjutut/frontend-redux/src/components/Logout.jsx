@@ -1,14 +1,17 @@
 import PropTypes from "prop-types";
+import { Form, Button } from "react-bootstrap";
 
 const Logout = ({ handleLogout, username }) => {
   return (
     <>
-      <form onSubmit={handleLogout}>
-        Logged in as {username}
-        <button data-testid="logout" type="submit">
-          logout
-        </button>
-      </form>
+      <Form onSubmit={handleLogout}>
+        <Form.Group>
+          Logged in as {username}
+          <Button data-testid="logout" type="submit">
+            logout
+          </Button>
+        </Form.Group>
+      </Form>
     </>
   );
 };

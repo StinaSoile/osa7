@@ -19,7 +19,7 @@ const createBlog = async (newObject, token) => {
   return response.data
 };
 
-const likeBlog = async (id, newObject, token) => {
+const changeBlog = async (id, newObject, token) => {
   const config = {
     headers: { Authorization: `Bearer ${token}` }
   }
@@ -35,4 +35,4 @@ const deleteBlog = async (id, token) => {
   return response.data
 }
 
-export default { getAll, createBlog, likeBlog, deleteBlog }
+export default { getAll, createBlog, changeBlog, deleteBlog }
